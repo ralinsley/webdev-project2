@@ -1,11 +1,11 @@
 -- Remove any existing database and user.
 DROP DATABASE IF EXISTS project2;
-DROP USER IF EXISTS p2-user@localhost;
+DROP USER IF EXISTS p2_user@localhost;
 
 -- Create Unforget database and user. Ensure Unicode is fully supported.
 CREATE DATABASE project2 CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-CREATE USER p2-user@localhost IDENTIFIED WITH mysql_native_password BY 'Webdev!';
-GRANT ALL PRIVILEGES ON project2.* TO p2-user@localhost;
+CREATE USER p2_user@localhost IDENTIFIED WITH mysql_native_password BY 'Webdev!';
+GRANT ALL PRIVILEGES ON project2.* TO p2_user@localhost;
 
 
 
