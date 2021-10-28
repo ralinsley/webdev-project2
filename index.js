@@ -40,7 +40,7 @@ connection.query(selectQuery, (error, rows) => {
 });
 
 const hostname = 'localhost';
-const port = 5001;
+const port = 8443;
 
 service.listen(port, hostname, () => {
     console.log(`We're live on port ${port}!`);
@@ -62,7 +62,7 @@ service.options('*', (request, response) => {
 service.use(express.json());
 
 // post a secret into the secrets database
-service.post('/secret', (request, response) => {
+service.post('/confess', (request, response) => {
     if (request.body.hasOwnProperty('secret') &&
         request.body.hasOwnProperty('secret_type')) {
         const parameters = [
@@ -97,7 +97,7 @@ service.post('/secret', (request, response) => {
 
 
 // returns all secrets of that type.
-service.get('/type', (request, response) => {
+service.get('/get/:type', (request, response) => {
     const parameters = [
         request.body.secret_type
     ];
@@ -121,39 +121,53 @@ service.get('/type', (request, response) => {
 
 // endpoint for getting the report
 service.get('/report.html', (request, response) => {
-    response.sendFile('report.hml');
+    response.sendFile('/home/sterart/webdev-project2/report.hml');
 });
 
 
-service.post('/follow/:followee/:follower', (request, response) => {
 
-    const query = 'INSERT INTO humans(username, screenname) VALUES (?, ?)';
-    connection.query(query, parameters, (error, result) => {
-        if (error) {
-            response.status(500);
-            response.json({
-                ok: false,
-                results: error.message,
-            });
-        } else {
-            response.status(204);
-            response.json({
-                ok: true,
-                results: result.insertId,
-            });
-        }
-    });
+// update a secret
+// service.patch('/memories/:id', (request, response) => {
+//     const parameters = [
+//       request.body.year,
+//       request.body.month,
+//       request.body.day,
+//       request.body.entry,
+//       parseInt(request.params.id),
+//     ];
+  
+//     const query = 'UPDATE memory SET year = ?, month = ?, day = ?, entry = ? WHERE id = ?';
+//     connection.query(query, parameters, (error, result) => {
+//       if (error) {
+//         response.status(404);
+//         response.json({
+//           ok: false,
+//           results: error.message,
+//         });
+//       } else {
+//         response.json({
+//           ok: true,
+//         });
+//       }
+//     });
+//   });
 
-});
-
-service.get('/follow/:followee', (request, response) => {
-
-});
-
-service.delete('/follow/:followee/:follower', (request, response) => {
-
-});
-
-service.delete('/humans/:id', (request, response) => {
-
-});
+// delete a secret 
+// service.delete('/memories/:id', (request, response) => {
+//     const parameters = [parseInt(request.params.id)];
+  
+//     const query = 'UPDATE memory SET is_deleted = 1 WHERE id = ?';
+//     connection.query(query, parameters, (error, result) => {
+//       if (error) {
+//         response.status(404);
+//         response.json({
+//           ok: false,
+//           results: error.message,
+//         });
+//       } else {
+//         response.json({
+//           ok: true,
+//         });
+//       }
+//     });
+//   });
