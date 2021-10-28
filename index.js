@@ -98,11 +98,11 @@ service.post('/confess', (request, response) => {
 
 // returns all secrets of that type.
 service.get('/get/:type', (request, response) => {
-    const parameters = [
-        request.body.secret_type
+    const parameter = [
+        request.params.type,
     ];
     const query = 'SELECT * FROM secrets WHERE secret_type = ?';
-    connection.query(query, parameters, (error, rows) => {
+    connection.query(query, parameter, (error, rows) => {
         if (error) {
             response.status(500);
             response.json({
@@ -121,7 +121,7 @@ service.get('/get/:type', (request, response) => {
 
 // endpoint for getting the report
 service.get('/report.html', (request, response) => {
-    response.sendFile('/home/sterart/webdev-project2/report.hml');
+    response.sendFile('/home/sterart/webdev-project2/report.html');
 });
 
 
