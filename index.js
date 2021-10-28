@@ -119,8 +119,9 @@ service.get('/type', (request, response) => {
     });
 });
 
-// endpoint for gettinv the report
+// endpoint for getting the report
 service.get('/report.html', (request, response) => {
+    response.sendFile('report.hml');
 });
 
 
