@@ -1,9 +1,9 @@
 const express = require('express');
-const service = express();
 
 const fs = require('fs');
 const mysql = require('mysql');
 
+const service = express();
 const json = fs.readFileSync('credentials.json', 'utf8');
 const credentials = JSON.parse(json);
 const id = 0;
@@ -12,24 +12,41 @@ const connection = mysql.createConnection(credentials);
 connection.connect(error => {
     if (error) {
         console.error(error);
-        process.exit(1);    
+        process.exit(1);
     }
 });
 
-service.listen(port, () => {
+
+const hostname = 'localhost';
+const port = 5001;
+
+service.listen(port, hostname, () => {
     console.log(`We're live on port ${port}!`);
+});
+
+// cross origin
+service.use((request, response, next) => {
+    response.set('Access-Control-Allow-Origin', '*');
+    next();
+});
+
+service.options('*', (request, response) => {
+    response.set('Access-Control-Allow-Headers', 'Content-Type');
+    response.set('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
+    response.sendStatus(200);
   });
 
-service.post('/humans', (request, response) => {
-    if (request.body.hasOwnProperty('username') &&
-        request.body.hasOwnProperty('screenname')) {
+// post a secret into the secrets database
+service.post('/secret', (request, response) => {
+    if (request.body.hasOwnProperty('secret') &&
+        request.body.hasOwnProperty('secret_type')) {
         const parameters = [
-            request.body.username,
-            request.body.screenname,
+            request.body.secret,
+            request.body.secret_type
 
         ];
 
-        const query = 'INSERT INTO humans(username, screenname) VALUES (?, ?)';
+        const query = 'INSERT INTO secrets(secret, secret_type) VALUES (? ?)';
         connection.query(query, parameters, (error, result) => {
             if (error) {
                 response.status(500);
@@ -49,17 +66,18 @@ service.post('/humans', (request, response) => {
         response.status(400);
         response.json({
             ok: false,
-            results: 'Incomplete human.',
+            results: 'Needs a secret and a secret type.',
         });
     }
 });
 
-service.get('/humans/:id', (request, response) => {
+
+// returns all secrets of that type.
+service.get('/type', (request, response) => {
     const parameters = [
-        parseInt(request.params.username),
-        parseInt(request.params.screenname),
+        request.body.secret_type
     ];
-    const query = 'SELECT * FROM humans WHERE username = ? AND screenname = ?';
+    const query = 'SELECT * FROM secrets WHERE secret_type = ?';
     connection.query(query, parameters, (error, rows) => {
         if (error) {
             response.status(500);
@@ -68,7 +86,7 @@ service.get('/humans/:id', (request, response) => {
                 results: error.message,
             });
         } else {
-            const memories = rows.map(rowToMemory);
+            const secrets = rows.map(rowToMemory);
             response.json({
                 ok: true,
                 results: rows.map(rowToMemory),
@@ -76,6 +94,13 @@ service.get('/humans/:id', (request, response) => {
         }
     });
 });
+service.get('/report.html', (request, response) => {
+
+
+
+
+});
+
 
 service.post('/follow/:followee/:follower', (request, response) => {
 
