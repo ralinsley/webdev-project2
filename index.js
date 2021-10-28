@@ -40,7 +40,7 @@ connection.query(selectQuery, (error, rows) => {
 });
 
 const hostname = 'localhost';
-const port = 8443;
+const port = 5001;
 
 service.listen(port, hostname, () => {
     console.log(`We're live on port ${port}!`);
