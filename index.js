@@ -4,11 +4,13 @@ const fs = require('fs');
 const mysql = require('mysql');
 
 const service = express();
+const id = 0;
+
+
+// parse credentials
 const json = fs.readFileSync('credentials.json', 'utf8');
 const credentials = JSON.parse(json);
-const id = 0;
 const connection = mysql.createConnection(credentials);
-
 connection.connect(error => {
     if (error) {
         console.error(error);
@@ -17,6 +19,26 @@ connection.connect(error => {
 });
 
 
+// function to simplify SELECT statement returns 
+function rowToSecrets(row) {
+    return {
+        id: row.id,
+        secret_type: row.secret_type,
+        secret: row.secret,
+    };
+}
+
+// displays all rows in console
+const selectQuery = 'SELECT * FROM secrets';
+connection.query(selectQuery, (error, rows) => {
+    if (error) {
+        console.error(error);
+    } else {
+        const secrets = rows.map(rowToSecrets);
+        console.log(secrets);
+    }
+});
+
 const hostname = 'localhost';
 const port = 5001;
 
@@ -24,17 +46,20 @@ service.listen(port, hostname, () => {
     console.log(`We're live on port ${port}!`);
 });
 
-// cross origin
+// allow cross origin
 service.use((request, response, next) => {
     response.set('Access-Control-Allow-Origin', '*');
     next();
 });
 
+// cross origin * 
 service.options('*', (request, response) => {
     response.set('Access-Control-Allow-Headers', 'Content-Type');
     response.set('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
     response.sendStatus(200);
-  });
+});
+
+service.use(express.json());
 
 // post a secret into the secrets database
 service.post('/secret', (request, response) => {
@@ -43,7 +68,6 @@ service.post('/secret', (request, response) => {
         const parameters = [
             request.body.secret,
             request.body.secret_type
-
         ];
 
         const query = 'INSERT INTO secrets(secret, secret_type) VALUES (? ?)';
@@ -86,19 +110,17 @@ service.get('/type', (request, response) => {
                 results: error.message,
             });
         } else {
-            const secrets = rows.map(rowToMemory);
+            const secrets = rows.map(rowToSecrets);
             response.json({
                 ok: true,
-                results: rows.map(rowToMemory),
+                results: rows.map(rowToSecrets),
             });
         }
     });
 });
+
+// endpoint for gettinv the report
 service.get('/report.html', (request, response) => {
-
-
-
-
 });
 
 
