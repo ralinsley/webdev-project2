@@ -9,11 +9,41 @@
 </header>
 
 <body>
-    <h1>How to use</h1>
-    <p></p>
+    <h2>How to use</h2>
+    <p> This is a simple database with only one table, and two columns (not including the SERIAL id). First is "secret" which is a
+        TEXT field for a or any random thought. Second is "secret_type" which is VARCHAR(20) - up to 20
+        characters but preferably one word that describes the general category/type for the secret. And here are example
+        requests to test the endpoints. (Please don't put any actual secrets in here)<br><br>Create:
+    <pre>curl --header 'Content-Type: application/json' \     
+            --data '{"secret": "xx xx xx xx x.", "secret_type": "xxxx"}' \
+            https://project2.apolity.me:8443/confess</pre>
+    <br>Read: visit url: https://project2.apolity.me:8443/get to return all secrets in the database and
+    https://project2.apolity.me:8443/get/id to return a secret with that "id".
+    <br><br>Update: where "id" matches the id of the secret to update.
+    <pre>curl --HEADER 'Content-Type: application/json' 
+     --request PATCH --data 
+     '{"secret": "xx xx xx xx x.", "secret_type": "xxxx"}' 
+        https://project2.apolity.me:8443/update/id</pre>
+    <br><br>Delete: curl --request DELETE https://project2.apolity.me:8443/delete/id
+    </p>
     <ol>
-        <li>It is not a to-do list! It's a service that holds a db of secrets!</li>
-        <li></li>
+        <li>It is not a to-do list! It's a service that holds secrets confessed by users. (any random thought)</li>
+        <li>The web service uses a mysql database</li>
+        <li>It is an express based web service</li>
+        <li>available on: https://project2.apolity.me:8443/</li>
+        <li>/confess to post a new confession/secret. /update/:id to update/change a secret with that id. /get and
+            /get/:type to get all secrets and to get all secrets of a type. /delete/:id delete secret with that id.
+        </li>
+        <li>When users are posting a new secret, or updating a secret it must receive a JSON payload. The response from
+            the server are held in JSONs.</li>
+        <li>All CRUD operations are available.</li>
+        <li>The firewall should be all setup, and direct access to the database require credentials.</li>
+        <li>Nginx proxy server is setup.</li>
+        <li>Cross-origin resource sharing should be setup properly following Chapter 12 from allover.</li>
+        <li>The web service is run with pm2- should always be running</li>
+        <li>Should have access to my git repository</li>
+        <li>There have been several commits throughout these past few days.</li>
+        <li>You're here!</li>
     </ol>
 </body>
 
