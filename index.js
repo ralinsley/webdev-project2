@@ -95,6 +95,29 @@ service.post('/confess', (request, response) => {
     }
 });
 
+// get all secrets in the database
+// service.get('/get/)
+service.get('/get/', (request, response) => {
+    const parameter = [
+        request.params.type,
+    ];
+    const query = 'SELECT * FROM secrets';
+    connection.query(query, parameter, (error, rows) => {
+        if (error) {
+            response.status(500);
+            response.json({
+                ok: false,
+                results: error.message,
+            });
+        } else {
+            const secrets = rows.map(rowToSecrets);
+            response.json({
+                ok: true,
+                results: rows.map(rowToSecrets),
+            });
+        }
+    });
+});
 
 // returns all secrets of that type.
 service.get('/get/:type', (request, response) => {
@@ -126,48 +149,55 @@ service.get('/report.html', (request, response) => {
 
 
 
-// update a secret
-// service.patch('/memories/:id', (request, response) => {
-//     const parameters = [
-//       request.body.year,
-//       request.body.month,
-//       request.body.day,
-//       request.body.entry,
-//       parseInt(request.params.id),
-//     ];
-  
-//     const query = 'UPDATE memory SET year = ?, month = ?, day = ?, entry = ? WHERE id = ?';
-//     connection.query(query, parameters, (error, result) => {
-//       if (error) {
-//         response.status(404);
-//         response.json({
-//           ok: false,
-//           results: error.message,
-//         });
-//       } else {
-//         response.json({
-//           ok: true,
-//         });
-//       }
-//     });
-//   });
+// update a secret - p
+service.patch('/update/:id', (request, response) => {
+    if (request.body.hasOwnProperty('secret') &&
+        request.body.hasOwnProperty('secret_type')) {
+        const parameters = [
+            request.body.secret,
+            request.body.secret_type.
+            parseInt(request.params.id),
+        ];
+
+        const query = 'UPDATE secrets SET secret = ?, secret_type = ? WHERE id = ?';
+        connection.query(query, parameters, (error, result) => {
+            if (error) {
+                response.status(404);
+                response.json({
+                    ok: false,
+                    results: error.message,
+                });
+            } else {
+                response.json({
+                    ok: true,
+                });
+            }
+        });
+    } else {
+        response.status(400);
+        response.json({
+            ok: false,
+            results: 'Needs a new secret and a new secret type. ',
+        });
+    }
+});
 
 // delete a secret 
-// service.delete('/memories/:id', (request, response) => {
-//     const parameters = [parseInt(request.params.id)];
-  
-//     const query = 'UPDATE memory SET is_deleted = 1 WHERE id = ?';
-//     connection.query(query, parameters, (error, result) => {
-//       if (error) {
-//         response.status(404);
-//         response.json({
-//           ok: false,
-//           results: error.message,
-//         });
-//       } else {
-//         response.json({
-//           ok: true,
-//         });
-//       }
-//     });
-//   });
+service.delete('/delete/:id', (request, response) => {
+    const parameters = [parseInt(request.params.id)];
+
+    const query = 'DELETE FROM secrets WHERE id = ?';
+    connection.query(query, parameters, (error, result) => {
+      if (error) {
+        response.status(404);
+        response.json({
+          ok: false,
+          results: error.message,
+        });
+      } else {
+        response.json({
+          ok: true,
+        });
+      }
+    });
+  });
