@@ -70,7 +70,7 @@ service.post('/confess', (request, response) => {
             request.body.secret_type
         ];
 
-        const query = 'INSERT INTO secrets(secret, secret_type) VALUES (? ?)';
+        const query = 'INSERT INTO secrets(secret, secret_type) VALUES (?, ?)';
         connection.query(query, parameters, (error, result) => {
             if (error) {
                 response.status(500);
