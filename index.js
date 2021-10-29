@@ -155,8 +155,8 @@ service.patch('/update/:id', (request, response) => {
         request.body.hasOwnProperty('secret_type')) {
         const parameters = [
             request.body.secret,
-            request.body.secret_type.
-            parseInt(request.params.id),
+            request.body.secret_type,
+            parseInt(request.params.id)
         ];
 
         const query = 'UPDATE secrets SET secret = ?, secret_type = ? WHERE id = ?';
