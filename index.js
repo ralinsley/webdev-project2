@@ -130,7 +130,7 @@ service.get('/get/:type', (request, response) => {
             response.status(500);
             response.json({
                 ok: false,
-                results: error.message,
+                results: 'Specify a secret type in the URL.',
             });
         } else {
             const secrets = rows.map(rowToSecrets);
@@ -168,8 +168,10 @@ service.patch('/update/:id', (request, response) => {
                     results: error.message,
                 });
             } else {
+                const secrets = rows.map(rowToSecrets);
                 response.json({
                     ok: true,
+                    results: rows.map(rowToSecrets),
                 });
             }
         });
@@ -188,16 +190,18 @@ service.delete('/delete/:id', (request, response) => {
 
     const query = 'DELETE FROM secrets WHERE id = ?';
     connection.query(query, parameters, (error, result) => {
-      if (error) {
-        response.status(404);
-        response.json({
-          ok: false,
-          results: error.message,
-        });
-      } else {
-        response.json({
-          ok: true,
-        });
-      }
+        if (error) {
+            response.status(404);
+            response.json({
+                ok: false,
+                results: 'No secret with that id.',
+            });
+        } else {
+            const secrets = rows.map(rowToSecrets);
+            response.json({
+                ok: deleted,
+                results: rows.map(rowToSecrets),
+            });
+        }
     });
-  });
+});

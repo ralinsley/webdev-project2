@@ -18,7 +18,7 @@
             --data '{"secret": "xx xx xx xx x.", "secret_type": "xxxx"}' \
             https://project2.apolity.me:8443/confess</pre>
     <br>Read: visit url: https://project2.apolity.me:8443/get to return all secrets in the database and
-    https://project2.apolity.me:8443/get/id to return a secret with that "id".
+    https://project2.apolity.me:8443/get/secret_type to return secrets of that type.
     <br><br>Update: where "id" matches the id of the secret to update.
     <pre>curl --HEADER 'Content-Type: application/json' 
      --request PATCH --data 
