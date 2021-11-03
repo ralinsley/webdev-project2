@@ -198,7 +198,8 @@ service.delete('/delete/:id', (request, response) => {
             });
         } else {
             response.json({
-                ok: deleted,
+                ok: true,
+                results: 'secret was deleted',
             });
         }
     });
