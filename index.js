@@ -168,10 +168,9 @@ service.patch('/update/:id', (request, response) => {
                     results: error.message,
                 });
             } else {
-                const secrets = rows.map(rowToSecrets);
                 response.json({
                     ok: true,
-                    results: rows.map(rowToSecrets),
+                    result: 'Secret updated!',
                 });
             }
         });
