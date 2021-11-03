@@ -197,10 +197,8 @@ service.delete('/delete/:id', (request, response) => {
                 results: 'No secret with that id.',
             });
         } else {
-            const secrets = rows.map(rowToSecrets);
             response.json({
                 ok: deleted,
-                results: rows.map(rowToSecrets),
             });
         }
     });
