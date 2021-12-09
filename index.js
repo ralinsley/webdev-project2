@@ -147,7 +147,7 @@ service.get('/random', (request, response) => {
     const parameter = [
         request.params.type,
     ];
-    const query = 'SELECT TOP 1 * FROM secrets ORDER BY NEWID()';
+    const query = 'SELECT * FROM secrets ORDER BY RAND() LIMIT 1';
     connection.query(query, parameter, (error, rows) => {
         if (error) {
             console.log(error);
