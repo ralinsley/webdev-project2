@@ -142,6 +142,29 @@ service.get('/get/:type', (request, response) => {
     });
 });
 
+// returns a random secret.
+service.get('/random', (request, response) => {
+    const parameter = [
+        request.params.type,
+    ];
+    const query = 'SELECT TOP 1 * FROM secrets ORDER BY NEWID()';
+    connection.query(query, parameter, (error, rows) => {
+        if (error) {
+            response.status(500);
+            response.json({
+                ok: false,
+                results: 'no parameters- returns random secret',
+            });
+        } else {
+            const secrets = rows.map(rowToSecrets);
+            response.json({
+                ok: true,
+                results: rows.map(rowToSecrets),
+            });
+        }
+    });
+});
+
 // endpoint for getting the report
 service.get('/report.html', (request, response) => {
     response.sendFile('/home/sterart/webdev-project2/report.html');
