@@ -150,6 +150,7 @@ service.get('/random', (request, response) => {
     const query = 'SELECT TOP 1 * FROM secrets ORDER BY NEWID()';
     connection.query(query, parameter, (error, rows) => {
         if (error) {
+            console.log(error);
             response.status(500);
             response.json({
                 ok: false,
